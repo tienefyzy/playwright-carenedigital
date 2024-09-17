@@ -13,8 +13,8 @@ export const sharedTest = test.extend<TestParams>({
 });
 
 export const nqAutoTest = async ({ page, baseUrl, vendor, device }: { page: Page, baseUrl: string, vendor: string, device: string }) => {
-  await page.goto(`${baseUrl}/${vendor}/auto/parcours`);
-  await page.goto(`${baseUrl}/${vendor}/auto/parcours/nq/vehicule`);
+  await page.goto(`${baseUrl}${vendor}/auto/parcours`);
+  await page.goto(`${baseUrl}${vendor}/auto/parcours/nq/vehicule`);
   await page.getByLabel('Decline cookies').click();
   if(device == 'desktop')
   {
