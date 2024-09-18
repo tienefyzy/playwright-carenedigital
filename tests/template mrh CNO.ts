@@ -13,8 +13,8 @@ export const sharedTest = test.extend<TestParams>({
 });
 
 export const cnoMrhTest = async ({ page, baseUrl, vendor, device }: { page: Page, baseUrl: string, vendor: string, device: string }) => {
-  await page.goto(`${baseUrl}${vendor}/mrh/full/quote`);
-  await page.goto(`${baseUrl}${vendor}/mrh/full/quote/choixHabitation`);
+  await page.goto(`${baseUrl}${vendor}/mrh/parcours/quote`);
+  await page.goto(`${baseUrl}${vendor}/mrh/parcours/quote/choixHabitation`);
   await expect(page.getByLabel('Decline cookies')).toBeVisible();
   await page.getByLabel('Decline cookies').click();
   await expect(page.getByRole('heading', { name: 'Assurance habitation' })).toBeVisible();
