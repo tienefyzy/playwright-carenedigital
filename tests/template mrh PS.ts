@@ -28,7 +28,7 @@ export const psMrhTest = async ({ page, baseUrl, vendor, device }: { page: Page,
   await page.getByRole('button', { name: 'Suivant' }).click();
   await expect(page.getByRole('heading', { name: 'Nombre de pièces à assurer' })).toBeVisible();
   await page.getByLabel('', { exact: true }).selectOption('2');
-  await page.getByRole('button', { name: 'Suivant' }).click();await page.getByRole('button', { name: 'Suivant' }).click();
+  await page.getByRole('button', { name: 'Suivant' }).click();
   await expect(page.getByRole('heading', { name: 'Coordonnées' })).toBeVisible();
   await page.getByLabel('Civilité').selectOption('M.');
   await page.getByLabel('Nom', { exact: true }).click();
@@ -54,7 +54,6 @@ export const psMrhTest = async ({ page, baseUrl, vendor, device }: { page: Page,
   await expect(page.getByRole('heading', { name: 'Questions complémentaires' })).toBeVisible();
   await expect(page.getByText('Je suis')).toBeVisible();
   await page.getByLabel('Je suis').selectOption('locataireMeuble');
-  await page.getByRole('button', { name: 'Suivant' }).click();
   await page.getByRole('button', { name: 'Suivant' }).click();
   await page.getByRole('button', { name: 'Non' }).first().click();
   await page.getByLabel('Je souhaite être assuré(e) à').fill('2025-01-01');

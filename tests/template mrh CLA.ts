@@ -78,13 +78,12 @@ export const claMrhTest = async ({ page, baseUrl, vendor, device }: { page: Page
   await expect(page.getByText('Mon habitation est-elle équip')).toBeVisible();
   await page.getByRole('button', { name: 'Télésurveillance' }).click();
   await page.getByRole('button', { name: 'Non' }).nth(3).click();
-  await expect(page.getByLabel('', { exact: true })).toBeVisible();
-  await page.getByLabel('', { exact: true }).selectOption('25000');
+  await expect(page.getByText('La valeur de mes biens')).toBeVisible();
+  await page.getByLabel('La valeur de mes biens').selectOption('50000');
   await expect(page.getByText('Je souhaite que les biens pré')).toBeVisible();
-  await page.getByLabel('Je souhaite que les biens pré').selectOption('2500');
+  await page.getByLabel('Je souhaite que les biens pré').selectOption('5000');
   await page.getByRole('button', { name: 'Suivant' }).click();
   await expect(page.getByRole('heading', { name: 'Questions complémentaires' })).toBeVisible();
-  await expect(page.getByText('Je suis')).toBeVisible();
   await expect(page.getByText('Je suis')).toBeVisible();
   await page.getByLabel('Je suis').selectOption('usufruitier');
   await page.getByRole('button', { name: 'autre' }).click();
