@@ -6,6 +6,10 @@ export function getBaseUrl(env : any): string {
       return 'https://dev.parcours.carene.fr';
     case 'staging':
       return 'https://staging.parcours.carene.fr';
+    case 'preprod':
+      return 'https://preprod.parcours.carene.fr';
+    case 'prod':
+      return 'https://parcours.carene.fr';
     default:
       throw new Error(`Unknown environment: ${env}`);
   }
