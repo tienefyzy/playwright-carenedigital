@@ -1,3 +1,14 @@
+export function getVendor(product : any): string {
+  switch (product) {
+    case 'auto':
+      return 'wtw';
+    case 'mrh':
+      return 'carene';
+    default:
+      throw new Error(`Unknown product: ${product}`);
+  }
+}
+
 export function getBaseUrl(env : any): string {
   switch (env) {
     case 'local':
