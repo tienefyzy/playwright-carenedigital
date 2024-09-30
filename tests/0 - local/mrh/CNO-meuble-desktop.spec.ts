@@ -1,13 +1,11 @@
 import * as path from 'path';
 import { getBaseUrl, getVendor } from '../../env';
-import { sharedTest } from '../../template mrh';
-import { Test } from '../../template mrh';
+import { sharedTest, Test } from '../../template mrh';
 
 // Get the environment
 const product = path.basename(__dirname)
 const environment = path.basename(path.dirname(__dirname)).replace(/^\d+\s*-\s*/, '');
 const baseUrl = getBaseUrl(environment); // "https://dev.parcours.carene.fr"
-console.log(environment);
 
 // Get the business use case
 const filename = path.basename(__filename); // Extracts just the filename
@@ -19,12 +17,12 @@ console.log("Product:", product);  // Should log "auto"
 console.log("Journey:", journey);  // Should log "FQ"
 console.log("Use Case:", useCase);  // Should log "immat"
 console.log("Device:", device);    // Should log "desktop"
-const vendor = '';
+var vendor = '';
 
 //local tests don't have vendor in URL
 if(environment != 'local')
 {
-    const vendor = getVendor(product);
+    vendor = '/' + getVendor(product);
 }
 
 sharedTest.use({ baseUrl: baseUrl, vendor: vendor, useCase: useCase, device: device, product: product, journey: journey });

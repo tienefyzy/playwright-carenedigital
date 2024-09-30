@@ -168,5 +168,9 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
     await page.getByPlaceholder('rue de la gare, ...').click();
     await page.getByPlaceholder('rue de la gare, ...').fill('1 rue de la');
     await page.getByRole('option', { name: '1 La Rue 50440 La Hague' }).click();
+    await page.getByRole('button', { name: 'Suivant' }).click();
+    await expect(page.getByRole('heading', { name: 'Choisissez votre formule' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Responsabilité Civile, Vol &' })).toBeVisible();
+    await page.getByRole('button', { name: 'Choisir cette formule' }).nth(1).click();
   }
 };

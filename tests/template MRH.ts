@@ -118,9 +118,11 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
         await page.getByRole('button', { name: 'Non' }).click();
         break;
     }
+
+    await page.getByRole('button', { name: 'Suivant' }).click();
   }
 
-  await page.getByRole('button', { name: 'Suivant' }).click();
+  
 
 //Step 2 : nbPiecesStep
 
@@ -254,8 +256,8 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
     await expect(page.getByText('Vous souhaitez que les biens')).toBeVisible();
     await page.getByLabel('Vous souhaitez que les biens').selectOption('50000');
 
-    await expect(page.getByText('Le montant de mes objets de')).toBeVisible();
-    await page.getByLabel('Le montant de mes objets de').selectOption('5000');
+    await expect(page.getByText('Souhaitez-vous assurer vos objets')).toBeVisible();
+    await page.getByLabel('Souhaitez-vous assurer vos objets').selectOption('5000');
   }
 
   await page.getByRole('button', { name: 'Suivant' }).click();
@@ -304,6 +306,9 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
 
   await expect(page.getByText('Au cours des 2 dernières années, avez-vous fait l\'objet d\'une suspension de garantie ou')).toBeVisible();
   await page.getByRole('button', { name: 'Non' }).nth(3).click();
+
+  await expect(page.getByText('Au cours des 2 dernières années, avez-vous fait l\'objet d\'une résiliation par un précédent')).toBeVisible();
+  await page.getByRole('button', { name: 'Non' }).nth(4).click();
 
   await page.getByRole('button', { name: 'Suivant' }).click();
   
