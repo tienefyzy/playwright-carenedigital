@@ -199,7 +199,7 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
   await expect(page.getByText('Le bien à assurer est situé')).toBeVisible();
   await page.getByPlaceholder('rue de la gare, ...').click();
   await page.getByPlaceholder('rue de la gare, ...').fill('1 rue de la gare');
-  await page.getByRole('option', { name: 'Rue de la Gare 14000 Caen' }).click();
+  await page.getByRole('option', { name: 'Rue de la Gare 79000 Niort' }).click();
 
   if(journey == 'CLA')
   {
