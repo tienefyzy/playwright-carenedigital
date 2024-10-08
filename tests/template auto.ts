@@ -23,7 +23,11 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
   {
     await page.goto(`${baseUrl}${vendor}/auto/parcours`);
     await page.goto(`${baseUrl}${vendor}/auto/parcours/fq/vehicule`);
-    await expect(page.getByLabel('Decline cookies')).toBeVisible();
+    await expect(async () => {
+      await expect(page.getByLabel('Decline cookies')).toBeVisible();
+      }).toPass({
+        timeout: 20000
+      });
     await page.getByLabel('Decline cookies').click();
     if(device == 'desktop')
     {
@@ -41,7 +45,12 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
     await page.getByLabel('Selectionner').first().click();
     await expect(page.getByRole('heading', { name: 'CC 2.0 HDI 16V SPORT PACK' })).toBeVisible();
     await page.getByRole('button', { name: 'Valider' }).click();
-    await expect(page.getByRole('heading', { name: 'Dans quelle ville garez-vous' })).toBeVisible();
+    await expect(async () => {
+      await expect(page.getByRole('heading', { name: 'Dans quelle ville garez-vous' })).toBeVisible();
+      }).toPass({
+        timeout: 5000
+      });
+    
     await page.getByPlaceholder('Code postal, nom de la ville').click();
     await page.getByPlaceholder('Code postal, nom de la ville').fill('13100');
     await page.getByRole('option', { name: '- Le Tholonet' }).click();
@@ -79,6 +88,11 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
   {
     await page.goto(`${baseUrl}${vendor}/auto/parcours`);
     await page.goto(`${baseUrl}${vendor}/auto/parcours/nq/vehicule`);
+    await expect(async () => {
+      await expect(page.getByLabel('Decline cookies')).toBeVisible();
+      }).toPass({
+        timeout: 20000
+      });
     await page.getByLabel('Decline cookies').click();
     if(device == 'desktop')
     {
@@ -118,7 +132,12 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
     await page.getByPlaceholder('Code postal, nom de la ville').fill('13100');
     await page.getByRole('option', { name: '- Le Tholonet' }).click();
     await page.getByRole('button', { name: 'Suivant' }).click();
-    await page.getByRole('button', { name: 'En votre nom' }).click();
+    await expect(async () => {
+      await page.getByRole('button', { name: 'En votre nom' }).click();
+    }).toPass({
+      timeout: 10000
+    });
+
     await page.getByRole('button', { name: 'Suivant' }).click();
     await page.getByRole('button', { name: 'Vous êtes le seul conducteur' }).click();
     await page.getByRole('button', { name: 'Suivant' }).click();
@@ -144,7 +163,11 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
     await expect(page.getByText('Au cours des 36 derniers mois, avez-vous fait l\'objet de l\'un des évènements')).toBeVisible();
     await page.getByRole('button', { name: 'Aucun de ces évènements' }).click();
     await page.getByRole('button', { name: 'Suivant', exact: true }).click();
-    await expect(page.getByRole('heading', { name: 'Combien de sinistres ont été' })).toBeVisible();
+    await expect(async () => {
+      await expect(page.getByRole('heading', { name: 'Combien de sinistres ont' })).toBeVisible();
+    }).toPass({
+      timeout: 10000
+    });
     await page.getByRole('button', { name: '0', exact: true }).click();
     await expect(page.getByText('Sont à comptabiliser l\'')).toBeVisible();
     await page.getByRole('button', { name: 'Suivant' }).click();

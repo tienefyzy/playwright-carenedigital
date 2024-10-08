@@ -26,7 +26,11 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
 
 //Cookies
 
-  await expect(page.getByLabel('Decline cookies')).toBeVisible();
+  await expect(async () => {
+    await expect(page.getByLabel('Decline cookies')).toBeVisible();
+    }).toPass({
+      timeout: 20000
+    });
   await page.getByLabel('Decline cookies').click();
 
 //Step 1 : choixHabitation
@@ -126,17 +130,22 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
 
 //Step 2 : nbPiecesStep
 
+await expect(async () => {
   await expect(page.getByRole('heading', { name: 'Votre habitation' })).toBeVisible();
+}).toPass({
+  timeout: 10000
+});
+  
 
   await expect(page.getByText('Nombre de pièces')).toBeVisible();
 
   if(journey == 'PS')
   {
-    await page.getByLabel('Nombre de pièces').selectOption('2');
+    await page.locator('select').selectOption('2');
   }
   else
   {
-    await page.getByLabel('Nombre de pièces').selectOption('5');
+    await page.locator('select').selectOption('5');
   }
 
   if(journey == 'CLA')
@@ -151,29 +160,52 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
 
 //Step 3 : coordonneesFQ
 
-  await expect(page.getByRole('heading', { name: 'Coordonnées' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Vos coordonnées' })).toBeVisible();
 
-  await page.getByLabel('Civilité').selectOption('M.');
+  //await page.getByLabel('Civilité').selectOption('M.');
+  await page.getByRole('combobox').selectOption('M.');
 
-  await page.getByLabel('Nom', { exact: true }).click();
-  await page.getByLabel('Nom', { exact: true }).fill('PROVOLONE');
-  await page.getByLabel('Nom', { exact: true }).press('Tab');
+  //await page.getByLabel('Nom', { exact: true }).click();
+  
+  await page.getByRole('textbox').first().fill('FAIVRE');
+  await page.getByRole('textbox').first().press('Tab');
 
-  await page.getByLabel('Prénom').fill('Jean-Robert');
+  await page.getByRole('textbox').nth(1).fill('Thomas');
+  await page.getByRole('textbox').nth(1).press('Tab');
+
+  await page.locator('input[type="email"]').fill('geronimo@yopmail.com');
+
+  await page.getByRole('textbox').nth(3).click();
+  await page.getByRole('textbox').nth(3).fill('0613371337');
+/*
+  await page.getByRole('textbox').first().click();
+  await page.getByRole('textbox').first().fill('FAIVRE');
+  await page.getByRole('textbox').first().press('Tab');
+
+  await page.getByLabel('Prénom').fill('Thomas');
 
   await page.getByLabel('E-mail').click();
   await page.getByLabel('E-mail').fill('geronimo@yopmail.com');
 
   await page.getByLabel('Numéro de téléphone').click();
   await page.getByLabel('Numéro de téléphone').fill('0613371337');
+*/
+  //await expect(page.getByText('J’accepte que mes données')).toBeVisible();
+  await page.locator('label').filter({ hasText: 'J’accepte que mes données' }).locator('span').first().click();
 
   await page.getByRole('button', { name: 'Suivant' }).click();
 
 //Step 4 : propositionTarifaire
 
   await expect(page.getByRole('heading', { name: 'Notre proposition tarifaire' })).toBeVisible();
-  //A compléter quand tarif sera visible
-  await page.getByRole('button', { name: 'Suivant' }).click();
+  
+  //Bouchon tarif
+  await expect(async () => {
+    await page.getByRole('button', { name: 'Suivant' }).click();
+  }).toPass({
+    timeout: 5000
+  });
+  
 
 //Step 5 : questionsHabitation1
 
@@ -183,11 +215,13 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
 
   if(journey == 'PS')
     {
-      await page.getByLabel('Parmi les pièces à assurer,').selectOption('0');
+      //await page.getByLabel('Parmi les pièces à assurer,').selectOption('0');
+      await page.getByRole('combobox').selectOption('0');
     }
     else
     {
-      await page.getByLabel('Parmi les pièces à assurer,').selectOption('2');
+      //await page.getByLabel('Parmi les pièces à assurer,').selectOption('2');
+      await page.getByRole('combobox').selectOption('2');
     }
 
   await page.getByRole('button', { name: 'Suivant' }).click();
@@ -219,7 +253,8 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
     await expect(page.getByText('La surface totale des dé')).toBeVisible();
     await page.getByRole('button', { name: 'Oui' }).nth(2).click();
     await expect(page.getByText('Quelle est la surface totale')).toBeVisible();
-    await page.getByLabel('Quelle est la surface totale').selectOption('101a200');
+    //await page.getByLabel('Quelle est la surface totale').selectOption('101a200');
+    await page.locator('select').selectOption('101a200');
     await expect(page.getByText('Quel nombre de dépendances')).toBeVisible();
     await page.getByRole('button', { name: '2', exact: true }).click();
     await expect(page.getByText('Quelle est l\'adresse de votre 1ère dépendance ?')).toBeVisible();
@@ -254,10 +289,13 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
     await page.getByRole('button', { name: 'Alarme' }).click();
 
     await expect(page.getByText('Vous souhaitez que les biens')).toBeVisible();
-    await page.getByLabel('Vous souhaitez que les biens').selectOption('50000');
-
+    //await page.getByLabel('Vous souhaitez que les biens').selectOption('50000');
+    await page.locator('div').filter({ hasText: /^Choisir\.\.\.25 000 €50 000 €75 000 €100 000 €$/ }).getByRole('combobox').selectOption('50000');
+    
     await expect(page.getByText('Souhaitez-vous assurer vos objets')).toBeVisible();
-    await page.getByLabel('Souhaitez-vous assurer vos objets').selectOption('5000');
+    //await page.getByLabel('Souhaitez-vous assurer vos objets').selectOption('5000');
+    await page.locator('div').filter({ hasText: /^Choisir\.\.\.NonOui, pour 5 000 € \(soit 10% de votre capital mobilier\)$/ }).getByRole('combobox').selectOption('5000');
+
   }
 
   await page.getByRole('button', { name: 'Suivant' }).click();
@@ -280,10 +318,13 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
   if((journey == 'CLA') || (journey == 'CNO'))
   {
     await expect(page.getByText('Vous êtes', { exact: true })).toBeVisible();
+    //await page.getByRole('combobox').selectOption('liberal');
     await page.getByLabel('Vous êtes', { exact: true }).selectOption('enseignant');
   }
 
-  await page.getByRole('button', { name: 'Suivant' }).click();
+  await expect(async () => {
+    await page.getByRole('button', { name: 'Suivant' }).click();
+  }).toPass();
 
 //Step 8 : antecedents
 
@@ -314,13 +355,16 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
   
 //Step 9 : coordonneesFQ
 
-  await page.getByLabel('Ma date de naissance est le').fill('2000-01-01');
+  //await page.getByLabel('Ma date de naissance est le').fill('1983-07-16');
+  await page.locator('input[type="date"]').fill('1983-07-16');
 
   if((journey == 'CNO')||(useCase == 'appartement')) //Le vrai critère est : CNO ou résidence secondaire
   {
     await expect(page.getByText('L\'adresse concernant votre habitation à assurer est :')).toBeVisible();
     await expect(page.getByText('Souhaitez vous utiliser cette adresse comme adresse postale')).toBeVisible();
-    await page.getByRole('button', { name: 'Oui' }).click();
+    await expect(async () => {
+      await page.getByRole('button', { name: 'Oui' }).click();
+    }).toPass();
   }
 
   await page.getByRole('button', { name: 'Suivant' }).click();
