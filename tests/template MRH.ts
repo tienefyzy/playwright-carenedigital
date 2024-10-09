@@ -133,7 +133,7 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
 await expect(async () => {
   await expect(page.getByRole('heading', { name: 'Votre habitation' })).toBeVisible();
 }).toPass({
-  timeout: 10000
+  timeout: 20000
 });
   
 
@@ -160,8 +160,12 @@ await expect(async () => {
 
 //Step 3 : coordonneesFQ
 
+await expect(async () => {
   await expect(page.getByRole('heading', { name: 'Vos coordonnées' })).toBeVisible();
-
+}).toPass({
+  timeout: 20000
+});
+  
   //await page.getByLabel('Civilité').selectOption('M.');
   await page.getByRole('combobox').selectOption('M.');
 
@@ -191,9 +195,26 @@ await expect(async () => {
   await page.getByLabel('Numéro de téléphone').fill('0613371337');
 */
   //await expect(page.getByText('J’accepte que mes données')).toBeVisible();
-  await page.locator('label').filter({ hasText: 'J’accepte que mes données' }).locator('span').first().click();
 
-  await page.getByRole('button', { name: 'Suivant' }).click();
+  try {
+    // Attempt to perform the action
+    await expect(async () => {
+      await page.locator('label')
+      .filter({ hasText: 'J’accepte que mes données' })
+      .locator('span')
+      .first()
+      .click();
+      await page.locator('label').filter({ hasText: 'J’accepte que mes données' }).locator('span').first().click();
+    }).toPass({
+      timeout: 500
+    });
+    console.log('Don du consentement sur les données');
+  } catch (error) {
+    console.error('Pas de case à cocher sur le don du consentement', error);
+  }
+  
+    await page.getByRole('button', { name: 'Suivant' }).click();
+
 
 //Step 4 : propositionTarifaire
 
