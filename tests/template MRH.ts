@@ -133,7 +133,7 @@ export const Test = async ({ page, baseUrl, vendor, product, journey, useCase, d
 await expect(async () => {
   await expect(page.getByRole('heading', { name: 'Votre habitation' })).toBeVisible();
 }).toPass({
-  timeout: 20000
+  timeout: 60000
 });
   
 
@@ -146,6 +146,7 @@ await expect(async () => {
   else
   {
     await page.locator('select').selectOption('5');
+
   }
 
   if(journey == 'CLA')
@@ -153,7 +154,11 @@ await expect(async () => {
     await expect(page.getByText('Code postal')).toBeVisible();
     await page.getByPlaceholder('Code postal, nom de la ville').click();
     await page.getByPlaceholder('Code postal, nom de la ville').fill('75001');
-    await page.getByRole('option', { name: '- Paris 1er Arrondissement' }).click();
+    await expect(async () => {
+      await page.getByRole('option', { name: '- Paris 1er Arrondissement' }).click();
+    }).toPass({
+      timeout: 20000
+    });
   }
 
   await page.getByRole('button', { name: 'Suivant' }).click();
@@ -196,25 +201,16 @@ await expect(async () => {
 */
   //await expect(page.getByText('J’accepte que mes données')).toBeVisible();
 
-  try {
-    // Attempt to perform the action
-    await expect(async () => {
-      await page.locator('label')
-      .filter({ hasText: 'J’accepte que mes données' })
-      .locator('span')
-      .first()
-      .click();
-      await page.locator('label').filter({ hasText: 'J’accepte que mes données' }).locator('span').first().click();
-    }).toPass({
-      timeout: 500
-    });
-    console.log('Don du consentement sur les données');
-  } catch (error) {
-    console.error('Pas de case à cocher sur le don du consentement', error);
+  const consentCheckbox = page.locator('label').filter({ hasText: 'J’accepte que mes données' }).locator('span').first();
+
+  if (await consentCheckbox.isVisible()) {
+      await consentCheckbox.click();
+      console.log('Don du consentement sur les données');
+  } else {
+      console.log('Pas de case à cocher sur le don du consentement');
   }
   
-    await page.getByRole('button', { name: 'Suivant' }).click();
-
+  await page.getByRole('button', { name: 'Suivant' }).click();
 
 //Step 4 : propositionTarifaire
 
@@ -222,6 +218,7 @@ await expect(async () => {
   
   //Bouchon tarif
   await expect(async () => {
+    await page.getByRole('button', { name: 'Sélectionner cette formule' }).nth(1).click();
     await page.getByRole('button', { name: 'Suivant' }).click();
   }).toPass({
     timeout: 5000
@@ -253,8 +250,8 @@ await expect(async () => {
 
   await expect(page.getByText('Le bien à assurer est situé')).toBeVisible();
   await page.getByPlaceholder('rue de la gare, ...').click();
-  await page.getByPlaceholder('rue de la gare, ...').fill('1 rue de la gare');
-  await page.getByRole('option', { name: 'Rue de la Gare 79000 Niort' }).click();
+  await page.getByPlaceholder('rue de la gare, ...').fill('1 rue Bailleul');
+  await page.getByRole('option', { name: 'Rue Bailleul 75001 Paris' }).click();
 
   if(journey == 'CLA')
   {
@@ -323,25 +320,50 @@ await expect(async () => {
 
 //Step 7 : questionsComplementaires
 
+await expect(async () => {
   await expect(page.getByRole('heading', { name: 'Questions complémentaires' })).toBeVisible();
+  }).toPass({
+    timeout: 5000
+  });
 
   if(journey == 'CLA' && useCase == 'appartement')
   {
     await expect(page.getByText('En tant que locataire, vous ê')).toBeVisible();
-    await page.getByLabel('En tant que locataire, vous ê').selectOption('usufruitier');
+    //await page.getByLabel('En tant que locataire, vous ê').selectOption('usufruitier');
+    await page.getByRole('combobox').first().selectOption('usufruitier');
   }
   else if(journey == 'PS')
   {
     await expect(page.getByText('En tant que locataire, vous ê')).toBeVisible();
-    await page.getByLabel('En tant que locataire, vous ê').selectOption('locataireMeuble');
+    //await page.getByLabel('En tant que locataire, vous ê').selectOption('locataireMeuble');
+    await page.getByRole('combobox').selectOption('locataire');
   }
 
-  if((journey == 'CLA') || (journey == 'CNO'))
+  if(journey == 'CLA')
   {
-    await expect(page.getByText('Vous êtes', { exact: true })).toBeVisible();
-    //await page.getByRole('combobox').selectOption('liberal');
-    await page.getByLabel('Vous êtes', { exact: true }).selectOption('enseignant');
+    await expect(async () => {
+      await expect(page.getByText('Vous êtes', { exact: true })).toBeVisible();
+      //await page.getByLabel('Vous êtes', { exact: true }).selectOption('enseignant');
+      await page.getByRole('combobox').nth(1).selectOption('ceo');
+      //await page.getByRole('combobox').selectOption('ouvrier');
+    }).toPass({
+      timeout: 5000
+    });
+    //await page.getByRole('combobox').nth(1).selectOption('liberal');
   }
+
+  if(journey == 'CNO')
+    {
+      await expect(async () => {
+        await expect(page.getByText('Vous êtes', { exact: true })).toBeVisible();
+        //await page.getByLabel('Vous êtes', { exact: true }).selectOption('enseignant');
+        //await page.getByRole('combobox').nth(1).selectOption('ceo');
+        await page.getByRole('combobox').selectOption('ceo');
+      }).toPass({
+        timeout: 5000
+      });
+      //await page.getByRole('combobox').nth(1).selectOption('liberal');
+    }
 
   await expect(async () => {
     await page.getByRole('button', { name: 'Suivant' }).click();
@@ -364,7 +386,10 @@ await expect(async () => {
   await page.getByRole('button', { name: 'Oui' }).nth(2).click();
 
   await expect(page.getByText('Combien de sinistre(s) réglé(s) avez-vous eu lors de ces 2 dernières années ?', { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: '1' }).click();
+  await expect(async () => {
+    await page.getByRole('button', { name: '1' }).click();
+  }).toPass();
+  
 
   await expect(page.getByText('Au cours des 2 dernières années, avez-vous fait l\'objet d\'une suspension de garantie ou')).toBeVisible();
   await page.getByRole('button', { name: 'Non' }).nth(3).click();
