@@ -1,0 +1,142 @@
+{
+  "bean_id_person": "0002390000a2e0c0",
+  "bean_id_opportunity": "0002390000a2e119",
+  "last_edeal_api_request": {
+    "url": "https://crm.e-deal.net/carenepoc/api/base_data/1.0/Opportunity",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "d9e8df56-3f49-4153-9863-1361fac10a22"
+    },
+    "data": {
+      "data": {
+        "bean_type": "OpportunityBean",
+        "bean_data": {
+          "opptitle": "Efficy Opp Test",
+          "oppnumref": "Opp ref num",
+          "oppactid": "00023900000043e1",
+          "oppentid": "000239000009870e",
+          "oppperid": "0002390000096629",
+          "oppdate": "2024-10-20",
+          "oppstake": 45,
+          "oppstoid": "0002390000047057",
+          "oppopbid": "0002390000003473",
+          "oppdetail": "Detail Opp",
+          "oppcompetinf": "Compet Inf",
+          "oppmtinvest": 62,
+          "oppstuid": "000239000000342b",
+          "oppbizproviderid": "000239000009870e",
+          "opporiginintid": "0002390000096dc9",
+          "oppecheancedt_": "2023-05-06",
+          "oppdureepreavis_": "00023900000468b3",
+          "oppresildt_": "2015-06-01",
+          "oppprdveos_": "0002390000047093",
+          "opprecoperid_": "0002390000096629",
+          "oppstakeweighted_": 82,
+          "opptenant_": "0002390000044c97",
+          "oppprime_": 62
+        }
+      }
+    }
+  },
+  "last_edeal_api_response": {
+    "api_version": "1.0",
+    "api_type": "base_data",
+    "return_status": "OK",
+    "error_code": null,
+    "error_message": null,
+    "response_locale": "fr_FR",
+    "response_timezone": "Europe/Paris",
+    "data": {
+      "bean_type": "Opportunity",
+      "bean_id": "0002390000a2e119",
+      "bean_display": "Efficy Opp Test",
+      "bean_uri": "http://easp-ca-rec:8080/carenepoc/api/base_data/1.0/Opportunity",
+      "bean_data": {
+        "OppID": "0002390000a2e119",
+        "OppTitle": "Efficy Opp Test",
+        "OppNumRef": "Opp ref num",
+        "OppActID": "00023900000043e1",
+        "OppEntID": "000239000009870e",
+        "OppPerID": "0002390000096629",
+        "OppDate": "2024-10-20",
+        "OppStake": 45,
+        "OppStakeUpd": true,
+        "OppMtInvest": 62,
+        "OppStoID": "0002390000047057",
+        "OppStuID": "000239000000342b",
+        "OppOpbID": "0002390000003473",
+        "OppDetail": "Detail Opp",
+        "OppCompetInf": "Compet Inf",
+        "OppCptID": null,
+        "OppParentOwners": null,
+        "OppAttID": null,
+        "OppAttFileName": null,
+        "OppCreID": "00023900000961f5",
+        "OppModID": "00023900000961f5",
+        "OppCrDt": "2024-10-20T16:10:34+02:00",
+        "OppUpd": "2024-10-20T16:10:34+02:00",
+        "OppMbm": -2147483648,
+        "OppMbs": -2147483648,
+        "OppBizProviderID": "000239000009870e",
+        "OppPartitionID": null,
+        "OppBusOriginID": null,
+        "OppOriginIntID": "0002390000096dc9",
+        "OppHsBulkData": null,
+        "OppOffPrincID": null,
+        "OppSyncChangeKey": "000001@447f50fa78e92390e86a62e1c4524c7c",
+        "OppStakeWeighted_": null,
+        "OppEcheanceDt_": null,
+        "OppDureePreavis_": null,
+        "OppResilDt_": null,
+        "OppPrdVeos_": null,
+        "OppRecoPerID_": null,
+        "OppTenant_": null,
+        "OppETNumVeos_": null,
+        "OppPrime_": null,
+        "OppQuotNum_": null
+      }
+    }
+  },
+  "last_efficy_api_request": {
+    "url": "https://dev.api.carene.fr/efficy/api/v1//quote-requests/0002390000a2e119",
+    "headers": {
+      "Ocp-Apim-Subscription-Key": "b8bc5c13c5094bbd87490452f4cd75d1"
+    },
+    "params": {
+      "foreignEntity": "CRM/Opportunity"
+    }
+  },
+  "last_efficy_api_response": {
+    "product": "66fbc64f6e3625ff383a8217",
+    "assured": "67150f5693dea573b0349248",
+    "comment": "Ceci est un commentaire",
+    "owner": null,
+    "vendorType": "DIRECT",
+    "vendor": "66fbc9d76e3625ff383a9e01",
+    "effectiveDate": "2024-10-20T00:00:00.000Z",
+    "requestDate": "2024-10-20T00:00:00.000Z",
+    "foreignIds": [
+      {
+        "entity": "CRM/Opportunity",
+        "id": "0002390000a2e119"
+      }
+    ],
+    "isRepositorySync": false,
+    "lastModificationDate": null,
+    "submissionDate": null,
+    "status": "NEW",
+    "vendorRef": "",
+    "attachments": [],
+    "notify": [],
+    "insurerRequests": [],
+    "activityLogs": [],
+    "createdAt": "2024-10-20T14:10:34.954Z",
+    "updatedAt": "2024-10-20T14:10:34.954Z",
+    "code": "QR000000024",
+    "id": "67150f5a9886ece0545dee85"
+  },
+  "last_core_api_request": {},
+  "last_core_api_response": {},
+  "last_veos_api_request": {},
+  "last_veos_api_response": {}
+}
