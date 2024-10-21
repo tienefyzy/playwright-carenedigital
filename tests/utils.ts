@@ -8,6 +8,7 @@ const subscriptionKey = process.env.Ocp_Apim_Subscription_Key!;
 const EDEAL_TOKEN = process.env.EDEAL_TOKEN!;
 const EDEAL_API_URL = process.env.EDEAL_API_URL!;
 const EFFICY_API_URL = process.env.EFFICY_API_URL!;
+//const USER_LOGIN = process.env.USER_LOGIN!;
 
 const testDataPath = path.resolve(__dirname, 'testData.json');
 let testData = JSON.parse(fs.readFileSync(testDataPath, 'utf-8'));
@@ -236,158 +237,164 @@ export async function createOpportunityAndQuoteRequest(vendorType: string, bean_
         console.error('Error clearing testData.json:', error);
     }
 
-    const apiContext = await request.newContext({
-        extraHTTPHeaders: {
-            'Content-Type': 'application/json',
-            'Authorization': EDEAL_TOKEN
-        }
-    });
+    //Création de l'étude dans Efficy (EDEAL) afin d'obtenir le bean_id de l'opportunité
 
-    const date = new Date();
-    const today = date.toISOString().split('T')[0];
-
-    const edealRequestData = {
-        "data": {
-            "bean_type": "OpportunityBean",
-            "bean_data": {
-                "opptitle": "Efficy Opp Test",
-                "oppnumref": "Opp ref num",
-                "oppactid": "00023900000043e1",
-                "oppentid": "000239000009870e",
-                "oppperid": "0002390000096629",
-                "oppdate": today,
-                "oppstake": 45,
-                "oppstoid": "0002390000047057",
-                "oppopbid": "0002390000003473",
-                "oppdetail": "Detail Opp",
-                "oppcompetinf": "Compet Inf",
-                "oppmtinvest": 62,
-                "oppstuid": "000239000000342b",
-                "oppbizproviderid": "000239000009870e",
-                "opporiginintid": "0002390000096dc9",
-                "oppecheancedt_": "2023-05-06",
-                "oppdureepreavis_": "00023900000468b3",
-                "oppresildt_": "2015-06-01",
-                "oppprdveos_": "0002390000047093",
-                "opprecoperid_": "0002390000096629",
-                "oppstakeweighted_": 82,
-                "opptenant_": "0002390000044c97",
-                "oppprime_": 62
+        const apiContext = await request.newContext({
+            extraHTTPHeaders: {
+                'Content-Type': 'application/json',
+                'Authorization': EDEAL_TOKEN
             }
-        }
-    };
+        });
 
-    const reponseEdealCreateQR = await apiContext.post(`${EDEAL_API_URL}/Opportunity`, {
-        data: edealRequestData
-    });
+        const date = new Date();
+        const today = date.toISOString().split('T')[0];
 
-    const reponseEDEALBody = await reponseEdealCreateQR.json();
-    const bean_id_opportunity = reponseEDEALBody.data.bean_id;
-    console.log('bean_id_opportunity:', bean_id_opportunity);
+        const edealRequestData = {
+            "data": {
+                "bean_type": "OpportunityBean",
+                "bean_data": {
+                    "opptitle": "Efficy Opp Test",
+                    "oppnumref": "Opp ref num",
+                    "oppactid": "00023900000043e1",
+                    "oppentid": "000239000009870e",
+                    "oppperid": "0002390000096629",
+                    "oppdate": today,
+                    "oppstake": 45,
+                    "oppstoid": "0002390000047057",
+                    "oppopbid": "0002390000003473",
+                    "oppdetail": "Detail Opp",
+                    "oppcompetinf": "Compet Inf",
+                    "oppmtinvest": 62,
+                    "oppstuid": "000239000000342b",
+                    "oppbizproviderid": "000239000009870e",
+                    "opporiginintid": "0002390000096dc9",
+                    "oppecheancedt_": "2023-05-06",
+                    "oppdureepreavis_": "00023900000468b3",
+                    "oppresildt_": "2015-06-01",
+                    "oppprdveos_": "0002390000047093",
+                    "opprecoperid_": "0002390000096629",
+                    "oppstakeweighted_": 82,
+                    "opptenant_": "0002390000044c97",
+                    "oppprime_": 62
+                }
+            }
+        };
+
+        const reponseEdealCreateQR = await apiContext.post(`${EDEAL_API_URL}/Opportunity`, {
+            data: edealRequestData
+        });
+
+        const reponseEDEALBody = await reponseEdealCreateQR.json();
+        const bean_id_opportunity = reponseEDEALBody.data.bean_id;
+        console.log('bean_id_opportunity:', bean_id_opportunity);
 
     // Store request and response in testData.json
-    testData.bean_id_opportunity = bean_id_opportunity;
-    testData.last_edeal_api_request = {
-        url: `${EDEAL_API_URL}/Opportunity`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': EDEAL_TOKEN
-        },
-        data: edealRequestData
-    };
-    testData.last_edeal_api_response = reponseEDEALBody;
+        testData.bean_id_opportunity = bean_id_opportunity;
+        testData.last_edeal_api_request = {
+            url: `${EDEAL_API_URL}/Opportunity`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': EDEAL_TOKEN
+            },
+            data: edealRequestData
+        };
+        testData.last_edeal_api_response = reponseEDEALBody;
 
-    try {
-        fs.writeFileSync(testDataPath, JSON.stringify(testData, null, 2));
-    } catch (error) {
-        console.error('Error writing to testData.json:', error);
-    }
+        try {
+            fs.writeFileSync(testDataPath, JSON.stringify(testData, null, 2));
+        } catch (error) {
+            console.error('Error writing to testData.json:', error);
+        }
 
     expect(reponseEdealCreateQR.ok()).toBeTruthy();
 
-    const efficyRequestData = {
-        "product": {
-            "code": "V13AUTO"
-        },
-        "assured": {
-            "foreignIds": [{
-                "entity": "CRM/Personne",
-                "id": bean_id_person
-            }]
-        },
-        "comment": "Ceci est un commentaire",
-        "vendorType": vendorType,
-        "requestDate": today,
-        "effectiveDate": today,
-        "vendor": {
-            "foreignIds": [{
-                "entity": "VEOS/Login",
-                "id": "pablo.suarez"
-            }]
-        },
-        "foreignIds": [{
-            "entity": "CRM/Opportunity",
-            "id": bean_id_opportunity
-        }]
-    };
+    //Création de l'étude dans Efficy (API Yzy)
 
-    const reponseEfficyCreateQR = await apiContext.post(`${EFFICY_API_URL}/quote-requests/`, {
-        headers: {
-            'Ocp-Apim-Subscription-Key': subscriptionKey
-        },
-        data: efficyRequestData
-    });
+        const efficyRequestData = {
+            "product": {
+                "code": "V13AUTO"
+            },
+            "assured": {
+                "foreignIds": [{
+                    "entity": "CRM/Personne",
+                    "id": bean_id_person
+                }]
+            },
+            "comment": "Ceci est un commentaire",
+            "vendorType": vendorType,
+            "requestDate": today,
+            "effectiveDate": today,
+            "vendor": {
+                "foreignIds": [{
+                    "entity": "VEOS/Login",
+                    "id": "pablo.suarez"
+                }]
+            },
+            "foreignIds": [{
+                "entity": "CRM/Opportunity",
+                "id": bean_id_opportunity
+            }]
+        };
 
-    const responseEfficyBody = await reponseEfficyCreateQR.json();
+        const reponseEfficyCreateQR = await apiContext.post(`${EFFICY_API_URL}/quote-requests/`, {
+            headers: {
+                'Ocp-Apim-Subscription-Key': subscriptionKey
+            },
+            data: efficyRequestData
+        });
+
+        const responseEfficyBody = await reponseEfficyCreateQR.json();
 
     // Store request and response in testData.json
-    testData.last_efficy_api_request = {
-        url: `${EFFICY_API_URL}/quote-requests/`,
-        headers: {
-            'Ocp-Apim-Subscription-Key': subscriptionKey
-        },
-        data: efficyRequestData
-    };
-    testData.last_efficy_api_response = responseEfficyBody;
+        testData.last_efficy_api_request = {
+            url: `${EFFICY_API_URL}/quote-requests/`,
+            headers: {
+                'Ocp-Apim-Subscription-Key': subscriptionKey
+            },
+            data: efficyRequestData
+        };
+        testData.last_efficy_api_response = responseEfficyBody;
 
-    try {
-        fs.writeFileSync(testDataPath, JSON.stringify(testData, null, 2));
-    } catch (error) {
-        console.error('Error writing to testData.json:', error);
-    }
+        try {
+            fs.writeFileSync(testDataPath, JSON.stringify(testData, null, 2));
+        } catch (error) {
+            console.error('Error writing to testData.json:', error);
+        }
 
     expect(reponseEfficyCreateQR.ok()).toBeTruthy();
 
-    const responseEfficyGetQuoteRequest = await apiContext.get(`${EFFICY_API_URL}/quote-requests/${bean_id_opportunity}`, {
-        headers: {
-            'Ocp-Apim-Subscription-Key': subscriptionKey
-        },
-        params: {
-            'foreignEntity': 'CRM/Opportunity'
-        }
-    });
+    //Vérification de la création de l'étude
+
+        const responseEfficyGetQuoteRequest = await apiContext.get(`${EFFICY_API_URL}/quote-requests/${bean_id_opportunity}`, {
+            headers: {
+                'Ocp-Apim-Subscription-Key': subscriptionKey
+            },
+            params: {
+                'foreignEntity': 'CRM/Opportunity'
+            }
+        });
 
     const responseEfficyGetQuoteRequestBody = await responseEfficyGetQuoteRequest.json();
 
     // Store request and response in testData.json
-    testData.last_efficy_api_request = {
-        url: `${EFFICY_API_URL}/quote-requests/${bean_id_opportunity}`,
-        headers: {
-            'Ocp-Apim-Subscription-Key': subscriptionKey
-        },
-        params: {
-            'foreignEntity': 'CRM/Opportunity'
+        testData.last_efficy_api_request = {
+            url: `${EFFICY_API_URL}/quote-requests/${bean_id_opportunity}`,
+            headers: {
+                'Ocp-Apim-Subscription-Key': subscriptionKey
+            },
+            params: {
+                'foreignEntity': 'CRM/Opportunity'
+            }
+        };
+        testData.last_efficy_api_response = responseEfficyGetQuoteRequestBody;
+
+        try {
+            fs.writeFileSync(testDataPath, JSON.stringify(testData, null, 2));
+        } catch (error) {
+            console.error('Error writing to testData.json:', error);
         }
-    };
-    testData.last_efficy_api_response = responseEfficyGetQuoteRequestBody;
 
-    try {
-        fs.writeFileSync(testDataPath, JSON.stringify(testData, null, 2));
-    } catch (error) {
-        console.error('Error writing to testData.json:', error);
-    }
-
-    expect(responseEfficyGetQuoteRequestBody.ok()).toBeTruthy();
+    expect(responseEfficyGetQuoteRequest.ok()).toBeTruthy();
 
     await apiContext.dispose();
 }
